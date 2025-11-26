@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brazil Agro Assets | M&A in Brazilian Meat Industry</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Font: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+    <style>
+        /* Customizing Tailwind default configuration */
+        :root {
+            --color-primary-dark: #0A192F; /* Deep Navy Blue */
+            --color-accent-gold: #FFD700; /* Gold */
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--color-primary-dark);
+            color: #E2E8F0; /* Light text for dark background */
+        }
+        .section-header {
+            border-left: 4px solid var(--color-accent-gold);
+            padding-left: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            font-weight: 700;
+        }
+        .modal, .form-overlay {
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        /* Style for the floating WhatsApp button */
+        .whatsapp-float {
+            position: fixed;
+            width: 60px;
+            height: 60px;
+            bottom: 40px;
+            right: 40px;
+            background-color: #25D366;
+            color: #FFF;
+            border-radius: 50px;
+            text-align: center;
+            font-size: 30px;
+            box-shadow: 2px 2px 3px #999;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s;
+        }
+        .whatsapp-float:hover {
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 1. Modal for API Results (Renamed for clarity, content updated to English where necessary) -->
+    <div id="resultModal" class="modal fixed inset-0 bg-black bg-opacity-75 z-[100] flex items-center justify-center opacity-0 invisible" onclick="closeModal()">
+        <div class="bg-gray-800 rounded-xl shadow-2xl p-6 w-11/12 max-w-2xl transform transition-transform duration-300 scale-95" onclick="event.stopPropagation()">
+            <div class="flex justify-between items-center mb-4 border-b pb-2 border-gray-700">
+                <h3 id="modalTitle" class="text-xl font-bold text-yellow-400">Result</h3>
+                <button onclick="closeModal()" class="text-gray-400 hover:text-white transition">&times;</button>
+            </div>
+            <div id="modalContent" class="text-gray-300 whitespace-pre-wrap text-sm leading-relaxed max-h-96 overflow-y-auto">
+                <!-- API generated content will be inserted here -->
+            </div>
+            <div id="modalSources" class="mt-4 pt-2 border-t border-gray-700 text-xs text-gray-500">
+                <!-- Sources will be listed here -->
+            </div>
+        </div>
+    </div>
+    
+    <!-- 2. Full-Screen Contact Form Overlay -->
+    <div id="contactFormOverlay" class="form-overlay fixed inset-0 bg-gray-900 bg-opacity-95 z-[200] flex items-center justify-center opacity-0 invisible">
+        <div class="bg-gray-800 rounded-xl shadow-2xl p-8 w-11/12 max-w-lg md:max-w-xl transform transition-transform duration-300 scale-95">
+            <div class="flex justify-between items-center mb-6 border-b pb-4 border-gray-700">
+                <h2 class="text-3xl font-bold text-yellow-400">Confidential Inquiry</h2>
+                <button onclick="closeContactForm()" class="text-gray-400 hover:text-white text-3xl transition leading-none">&times;</button>
+            </div>
+            
+            <form id="investorForm" onsubmit="event.preventDefault(); sendEmail();">
+                <div class="space-y-4">
+                    <input type="text" id="investorName" placeholder="Your Name / Company" required class="w-full p-3 rounded-lg bg-gray-700 text-white border border-gray-600 focus:border-yellow-400 focus:ring-yellow-400">
+                    <input type="email" id="investorEmail" placeholder="Your Email Address" required class="w-full p-3 rounded-lg bg-gray-700 text-white border border-gray-600 focus:border-yellow-400 focus:ring-yellow-400">
+                    <input type="tel" id="investorPhone" placeholder="Your Phone Number (Optional)" class="w-full p-3 rounded-lg bg-gray-700 text-white border border-gray-600 focus:border-yellow-400 focus:ring-yellow-400">
+                    <textarea id="investorMessage" placeholder="Briefly describe your investment interest and required confidentiality level." rows="5" required class="w-full p-3 rounded-lg bg-gray-700 text-white border border-gray-600 focus:border-yellow-400 focus:ring-yellow-400"></textarea>
+                </div>
+                
+                <button type="submit" id="formSubmitButton" class="mt-6 px-8 py-3 text-lg font-bold w-full text-gray-900 bg-yellow-400 rounded-xl shadow-lg hover:bg-yellow-500 transition duration-300 transform hover:scale-105">
+                    Submit Inquiry
+                </button>
+
+                <p id="formWarning" class="text-xs text-red-400 mt-4 text-center hidden">
+                    *Note: This action will open your device's default email application to send the message.
+                </p>
+            </form>
+        </div>
+    </div>
+
+
+    <!-- Header & Navigation -->
+    <header class="sticky top-0 z-50 bg-gray-900 bg-opacity-95 shadow-lg">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center max-w-7xl">
+            <!-- Logo - Using placeholder URL for now. Must be replaced with actual transparent logo URL. -->
+            <a href="#" class="flex items-center space-x-2">
+                <!-- IMPORTANT: Replace the src below with the URL of your uploaded transparent LOGO.jpg -->
+                <img src="https://placehold.co/180x40/0A192F/E0E0E0?text=Brazil+Agro+Assets+Logo" alt="Brazil Agro Assets Logo" class="h-8 md:h-10 filter brightness-110">
+            </a>
+            
+            <!-- CTA in Nav - Changed to English and opens the form overlay -->
+            <button onclick="openContactForm()" class="px-4 py-2 text-sm md:text-base font-semibold text-gray-900 bg-yellow-400 rounded-lg shadow-md hover:bg-yellow-500 transition duration-300 transform hover:scale-105">
+                Contact Us
+            </button>
+        </div>
+    </header>
+
+    <main>
+        
+        <!-- 1. Hero Section -->
+        <section class="relative py-20 md:py-32 text-center bg-cover bg-center" style="background-image: url('https://placehold.co/1200x600/102A43/FFD700?text=M%26A+in+Brazilian+Agribusiness');">
+            <div class="container mx-auto px-4 max-w-4xl bg-gray-900 bg-opacity-80 p-6 md:p-10 rounded-xl shadow-2xl border-t-4 border-yellow-500">
+                <h1 class="text-4xl md:text-6xl font-extrabold mb-4 leading-tight text-white">
+                    We Connect Global Investors to Brazil’s Meat Industry
+                </h1>
+                <p class="text-xl md:text-2xl mb-8 font-light text-yellow-400">
+                    Confidential opportunities in beef, poultry and pork processing plants.
+                </p>
+                <!-- CTA - Text changed to English -->
+                <a href="#services" class="inline-block px-10 py-4 text-lg font-bold text-gray-900 bg-yellow-400 rounded-xl shadow-lg hover:bg-yellow-500 transition duration-300 transform hover:scale-105 border-2 border-yellow-400">
+                    Explore Opportunities
+                </a>
+
+                <!-- WhatsApp icon added to Hero for quick access -->
+                <a href="https://wa.me/5549999519487" target="_blank" class="inline-flex items-center justify-center ml-4 px-4 py-4 text-lg font-bold text-white bg-green-600 rounded-full shadow-lg hover:bg-green-700 transition duration-300 transform hover:scale-110" title="Contact via WhatsApp">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm4.35 15.65c-.097.045-.557.26-.64.364-.207.25-.43 3.614-5.32 1.34-3.59-1.63-4.39-3.414-4.6-3.79-.27-2.14.78-3.32 1.05-3.6.14-.14.28-.2.43-.28 0 0 .58-.23 1.15-.23.14 0 .23-.01.32-.01.14 0 .28.01.42.04.14.03.36.09.58.62.2.5.76 1.8.76 1.8s.07.15-.02.32c-.11.17-.18.27-.3.44-.08.11-.16.22-.24.36-.08.13-.17.26-.26.4-.05.08-.1.17-.15.26-.06.11-.12.22-.18.33-.17.32-.3.57-.42.79-.12.22-.2.38-.26.5-.06.12-.1.21-.13.31-.03.1-.05.19-.05.28s.01.2.04.28c.03.09.07.17.1.25.04.09.09.18.15.27.08.13.17.26.26.4.08.14.17.27.26.4.05.08.1.17.15.26.06.11.12.22.18.33.17.32.3.57.42.79.12.22.2.38.26.5.06.12.1.21.13.31.03.1.05.19.05.28s-.01.2-.04.28c-.03.09-.07.17-.1.25-.04.09-.09.18-.15.27-.08.13-.17.26-.26.4-.08.14-.17.27-.26.4-.05.08-.1.17-.15.26-.06.11-.12.22-.18.33.11.08.23.15.36.21.2.1.42.19.66.27.18.06.37.11.57.16.2.05.41.09.63.12.44.07.89.1.34 0-.17-.02-.33-.04-.5-.07-.4-.07-.8-.11-1.2-.17-.14-.02-.3-.04-.46-.07-.2-.04-.4-.08-.6-.13-.3-.08-.6-.16-.9-.25-.3-.09-.58-.2-.87-.33-.27-.12-.53-.26-.78-.4-.25-.14-.5-.29-.73-.46-.37-.25-.72-.53-1.04-.84-.32-.3-.62-.63-.9-.98-1.24-1.53-2.02-3.32-2.31-4.73-.34-1.63-.12-3.36.43-4.88.54-1.52 1.58-2.6 2.45-3.08.5-.27 1.04-.32 1.57-.32.07 0 .15.01.23.01.12.01.23.02.35.03.12.01.23.03.35.04.23.02.46.06.7.11.23.05.46.12.69.2.14.05.28.1.43.16.14.06.28.13.42.2.16.08.31.17.47.27.15.1.3.2.45.31.14.1.28.2.42.31.14.1.27.21.4.33.08.08.16.17.24.25.05.05.1.1.15.15.2.2.4.4.58.6.14.15.28.3.4.45.1.12.2.25.3.38.1.13.2.26.29.4.09.14.17.28.25.43.07.13.14.26.2.4.06.14.1.29.15.43.04.14.08.28.12.42.04.14.07.28.09.43.02.13.04.27.05.4.01.14.01.28 0 .42-.01.14-.03.28-.06.42-.03.14-.07.28-.12.42-.04.14-.08.28-.12.42-.04.14-.08.28-.12.42zm-3.35-7.65c-.08-.13-.17-.26-.26-.4-.05-.08-.1-.17-.15-.26-.06-.11-.12-.22-.18-.33-.17-.32-.3-.57-.42-.79-.12-.22-.2-.38-.26-.5-.06-.12-.1-.21-.13-.31-.03-.1-.05-.19-.05-.28s.01-.2.04-.28c.03-.09.07-.17.1-.25.04-.09.09-.18.15-.27.08-.13.17-.26.26-.4.08-.14.17-.27.26-.4.05-.08.1-.17.15-.26.06-.11.12-.22.18-.33.17-.32.3-.57.42-.79.12-.22.2-.38.26-.5.06-.12.1-.21.13-.31.03-.1.05-.19.05-.28s-.01-.2-.04-.28c-.03-.09-.07-.17-.1-.25-.04-.09-.09-.18-.15-.27-.08-.13-.17-.26-.26-.4-.08-.14-.17-.27-.26-.4-.05-.08-.1-.17-.15-.26-.06-.11-.12-.22-.18-.33z"/></svg>
+                </a>
+            </div>
+        </section>
+
+        <!-- 2. About Us Section -->
+        <section id="about" class="py-16 md:py-24 bg-gray-900">
+            <div class="container mx-auto px-4 max-w-5xl">
+                <h2 class="text-3xl md:text-4xl section-header text-white mb-8">About Us</h2>
+                <div class="space-y-6 text-lg md:text-xl leading-relaxed">
+                    <p>
+                        <strong>Brazil Agro Assets</strong> is a specialized M&A advisory firm connecting international investors — especially from China and the Middle East — with high-quality meat processing assets in Brazil.
+                    </p>
+                    <p>
+                        We operate with transparency, confidentiality, and full alignment with both buyers and sellers. Our deep sector expertise ensures seamless transaction execution from origination to closing.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. Our Services Section - Icons updated to professional SVGs -->
+        <section id="services" class="py-16 md:py-24 bg-gray-800">
+            <div class="container mx-auto px-4 max-w-5xl">
+                <h2 class="text-3xl md:text-4xl section-header text-white mb-12">Our Services</h2>
+                
+                <div class="grid md:grid-cols-2 gap-8 lg:gap-12">
+
+                    <!-- Service Card 1: Acquisition (briefcase-business) -->
+                    <div class="p-6 bg-gray-700 rounded-xl shadow-lg border-t-4 border-yellow-400 hover:shadow-xl transition duration-300">
+                        <div class="flex items-center mb-3">
+                            <svg class="h-8 w-8 text-yellow-400 mr-3" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21V3"/><path d="M16 17V7"/><path d="M8 17V7"/><path d="M4 17V7"/><path d="M20 17V7"/></svg>
+                            <h3 class="text-xl font-bold text-white">Acquisition of Meat Processing Plants</h3>
+                        </div>
+                        <p class="text-gray-300">Beef, poultry, and pork facilities with federal inspection (SIF), HALAL certification and export capacity.</p>
+                    </div>
+
+                    <!-- Service Card 2: Buy-Side Mandate (compass) -->
+                    <div class="p-6 bg-gray-700 rounded-xl shadow-lg border-t-4 border-yellow-400 hover:shadow-xl transition duration-300">
+                        <div class="flex items-center mb-3">
+                            <svg class="h-8 w-8 text-yellow-400 mr-3" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m16.24 7.76-2.12 6.36-6.36 2.12 2.12-6.36z"/></svg>
+                            <h3 class="text-xl font-bold text-white">Buy-Side Mandate (Custom Asset Search)</h3>
+                        </div>
+                        <p class="text-gray-300">We locate specific plants and negotiate the acquisition directly with owners, maximizing value for the buyer.</p>
+                    </div>
+
+                    <!-- Service Card 3: Due Diligence (file-check) -->
+                    <div class="p-6 bg-gray-700 rounded-xl shadow-lg border-t-4 border-yellow-400 hover:shadow-xl transition duration-300">
+                        <div class="flex items-center mb-3">
+                            <svg class="h-8 w-8 text-yellow-400 mr-3" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="m9 15 2 2 4-4"/></svg>
+                            <h3 class="text-xl font-bold text-white">Due Diligence Support</h3>
+                        </div>
+                        <p class="text-gray-300">Technical, operational and regulatory screening before negotiation, mitigating risks for international investment.</p>
+                    </div>
+
+                    <!-- Service Card 4: Market Intelligence (trending-up) -->
+                    <div class="p-6 bg-gray-700 rounded-xl shadow-lg border-t-4 border-yellow-400 hover:shadow-xl transition duration-300">
+                        <div class="flex items-center mb-3">
+                            <svg class="h-8 w-8 text-yellow-400 mr-3" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 18 11 13 6 9 10 2 3"/><path d="M18 7h4v4"/></svg>
+                            <h3 class="text-xl font-bold text-white">Market Intelligence</h3>
+                        </div>
+                        <p class="text-gray-300">Analysis of capacity, compliance, licensing, SIF status, production potential and export viability.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 4. Why Brazil? Section - Icons and Gemini text updated -->
+        <section id="why-brazil" class="py-16 md:py-24 bg-gray-900">
+            <div class="container mx-auto px-4 max-w-5xl">
+                <h2 class="text-3xl md:text-4xl section-header text-white mb-12">Why Brazil?</h2>
+
+                <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 text-center">
+                    
+                    <!-- Icon 1: Globe (World’s largest) -->
+                    <div class="p-6 bg-gray-700 rounded-xl shadow-xl border-b-4 border-yellow-500">
+                        <svg class="h-8 w-8 text-yellow-400 mx-auto mb-2" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
+                        <p class="font-semibold text-lg text-white">World’s largest beef exporter</p>
+                    </div>
+
+                    <!-- Icon 2: Banknote (Competitive costs) -->
+                    <div class="p-6 bg-gray-700 rounded-xl shadow-xl border-b-4 border-yellow-500">
+                        <svg class="h-8 w-8 text-yellow-400 mx-auto mb-2" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="12" x="2" y="6" rx="2"/><circle cx="12" cy="12" r="2"/></svg>
+                        <p class="font-semibold text-lg text-white">Competitive production costs</p>
+                    </div>
+
+                    <!-- Icon 3: Line Chart (Strong markets) -->
+                    <div class="p-6 bg-gray-700 rounded-xl shadow-xl border-b-4 border-yellow-500">
+                         <svg class="h-8 w-8 text-yellow-400 mx-auto mb-2" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m18 17-6-6-4 4-2-2"/></svg>
+                        <p class="font-semibold text-lg text-white">Strong domestic and export markets</p>
+                    </div>
+
+                    <!-- Icon 4: Handshake (Strategic opportunity) -->
+                    <div class="p-6 bg-gray-700 rounded-xl shadow-xl border-b-4 border-yellow-500">
+                        <svg class="h-8 w-8 text-yellow-400 mx-auto mb-2" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 17h2c1.1 0 2-.9 2-2V9c0-1.1-.9-2-2-2h-2c-1.1 0-2 .9-2 2v6c0 1.1.9 2 2 2z"/><path d="M15 17h2c1.1 0 2-.9 2-2V9c0-1.1-.9-2-2-2h-2c-1.1 0-2 .9-2 2v6c0 1.1.9 2 2 2z"/><path d="M7 17h2c1.1 0 2-.9 2-2V9c0-1.1-.9-2-2-2H7c-1.1 0-2 .9-2 2v6c0 1.1.9 2 2 2z"/></svg>
+                        <p class="font-semibold text-lg text-white">Strategic opportunity for Chinese and Middle Eastern groups</p>
+                    </div>
+
+                </div>
+                
+                <!-- Gemini Market Briefing Feature - All text to English -->
+                <div class="mt-16 pt-8 border-t border-gray-700 text-center">
+                    <h3 class="text-2xl font-bold text-white mb-4">Market Briefing ✨</h3>
+                    <p class="text-gray-400 mb-6 max-w-xl mx-auto">Get an updated executive summary of M&A trends and regulations in the Brazilian meat market, using real-time data.</p>
+                    <button onclick="getMarketBriefing()" id="marketBriefingButton" class="px-8 py-3 text-lg font-bold text-gray-900 bg-yellow-400 rounded-xl shadow-lg hover:bg-yellow-500 transition duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed">
+                        Generate Market Summary ✨
+                    </button>
+                </div>
+                <!-- End of Market Briefing Feature -->
+
+            </div>
+        </section>
+
+        <!-- 5. Contact Section - All text and placeholders to English -->
+        <section id="contact" class="py-16 md:py-24 bg-gray-800">
+            <div class="container mx-auto px-4 max-w-3xl text-center">
+                <h2 class="text-3xl md:text-4xl section-header text-white mb-6 mx-auto w-fit">Contact</h2>
+                <p class="text-xl mb-10 text-gray-300">Initiate a confidential conversation about your next strategic investment.</p>
+
+                <!-- Gemini Draft Communication Feature - All text to English -->
+                <div class="bg-gray-700 p-6 rounded-xl shadow-xl mb-10">
+                    <h3 class="text-2xl font-bold text-white mb-4">Communication Draft ✨</h3>
+                    <p class="text-gray-400 mb-4 text-sm">Describe your interest (e.g., "Looking for HALAL certified beef plants in Mato Grosso.") and Gemini will generate a confidential email draft.</p>
+                    
+                    <textarea id="interestInput" class="w-full p-3 rounded-lg bg-gray-600 text-white border border-gray-500 focus:border-yellow-400 focus:ring focus:ring-yellow-400 focus:ring-opacity-50 transition duration-200" rows="4" placeholder="Ex: Chinese investor interested in acquiring a poultry frigorífico with SIF and export focus on the Middle East."></textarea>
+                    
+                    <button onclick="generateEmailDraft()" id="draftButton" class="mt-4 px-8 py-3 text-lg font-bold w-full text-gray-900 bg-yellow-400 rounded-xl shadow-lg hover:bg-yellow-500 transition duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed">
+                        Generate Email Draft ✨
+                    </button>
+                </div>
+                <!-- End of Draft Communication Feature -->
+
+
+                <div class="flex flex-col sm:flex-row justify-center gap-6">
+                    
+                    <!-- WhatsApp Link - Updated number -->
+                    <a href="https://wa.me/5549999519487" target="_blank" class="flex items-center justify-center space-x-2 px-8 py-4 bg-green-600 text-white font-bold rounded-xl shadow-lg hover:bg-green-700 transition duration-300 transform hover:scale-105">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm4.35 15.65c-.097.045-.557.26-.64.364-.207.25-.43 3.614-5.32 1.34-3.59-1.63-4.39-3.414-4.6-3.79-.27-2.14.78-3.32 1.05-3.6.14-.14.28-.2.43-.28 0 0 .58-.23 1.15-.23.14 0 .23-.01.32-.01.14 0 .28.01.42.04.14.03.36.09.58.62.2.5.76 1.8.76 1.8s.07.15-.02.32c-.11.17-.18.27-.3.44-.08.11-.16.22-.24.36-.08.13-.17.26-.26.4-.05.08-.1.17-.15.26-.06.11-.12.22-.18.33-.17.32-.3.57-.42.79-.12.22-.2.38-.26.5-.06.12-.1.21-.13.31-.03.1-.05.19-.05.28s.01.2.04.28c.03.09.07.17.1.25.04.09.09.18.15.27.08.13.17.26.26.4.08.14.17.27.26.4.05.08.1.17.15.26.06.11.12.22.18.33.17.32.3.57.42.79.12.22.2.38.26.5.06.12.1.21.13.31.03.1.05.19.05.28s-.01.2-.04.28c-.03.09-.07.17-.1.25-.04.09-.09.18-.15.27-.08.13-.17.26-.26.4-.08.14-.17.27-.26.4-.05.08-.1.17-.15.26-.06.11-.12.22-.18.33.11.08.23.15.36.21.2.1.42.19.66.27.18.06.37.11.57.16.2.05.41.09.63.12.44.07.89.1.34 0-.17-.02-.33-.04-.5-.07-.4-.07-.8-.11-1.2-.17-.14-.02-.3-.04-.46-.07-.2-.04-.4-.08-.6-.13-.3-.08-.6-.16-.9-.25-.3-.09-.58-.2-.87-.33-.27-.12-.53-.26-.78-.4-.25-.14-.5-.29-.73-.46-.37-.25-.72-.53-1.04-.84-.32-.3-.62-.63-.9-.98-1.24-1.53-2.02-3.32-2.31-4.73-.34-1.63-.12-3.36.43-4.88.54-1.52 1.58-2.6 2.45-3.08.5-.27 1.04-.32 1.57-.32.07 0 .15.01.23.01.12.01.23.02.35.03.12.01.23.03.35.04.23.02.46.06.7.11.23.05.46.12.69.2.14.05.28.1.43.16.14.06.28.13.42.2.16.08.31.17.47.27.15.1.3.2.45.31.14.1.28.2.42.31.14.1.27.21.4.33.08.08.16.17.24.25.05.05.1.1.15.15.2.2.4.4.58.6.14.15.28.3.4.45.1.12.2.25.3.38.1.13.2.26.29.4.09.14.17.28.25.43.07.13.14.26.2.4.06.14.1.29.15.43.04.14.08.28.12.42.04.14.07.28.09.43.02.13.04.27.05.4.01.14.01.28 0 .42-.01.14-.03.28-.06.42-.03.14-.07.28-.12.42-.04.14-.08.28-.12.42-.04.14-.08.28-.12.42zm-3.35-7.65c-.08-.13-.17-.26-.26-.4-.05-.08-.1-.17-.15-.26-.06-.11-.12-.22-.18-.33-.17-.32-.3-.57-.42-.79-.12-.22-.2-.38-.26-.5-.06.12-.1.21-.13.31-.03.1-.05.19-.05.28s.01.2.04.28c.03.09.07.17.1.25.04.09.09.18.15.27.08.13.17.26.26.4.08.14.17.27.26.4.05.08.1.17.15.26.06.11.12.22.18.33.17.32.3.57.42.79.12.22.2.38.26.5.06.12.1.21.13.31.03.1.05.19.05.28s-.01.2-.04.28c-.03.09-.07.17-.1.25-.04.09-.09.18-.15.27-.08.13-.17.26-.26.4-.08.14-.17.27-.26.4-.05.08-.1.17-.15.26-.06.11-.12.22-.18.33z"/></svg>
+                        <span>WhatsApp: +55 49 99951-9487</span>
+                    </a>
+
+                    <!-- Email Link - Updated email address -->
+                    <a href="mailto:brazilagroassets@gmail.com" class="flex items-center justify-center space-x-2 px-8 py-4 bg-yellow-400 text-gray-900 font-bold rounded-xl shadow-lg hover:bg-yellow-500 transition duration-300 transform hover:scale-105">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" fill="currentColor"><path d="M22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6zm-2 0l-8 5-8-5h16zm0 12H4V8l8 5 8-5v10z"/></svg>
+                        <span>Email: brazilagroassets@gmail.com</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Floating WhatsApp Button -->
+    <a href="https://wa.me/5549999519487" target="_blank" class="whatsapp-float">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm4.35 15.65c-.097.045-.557.26-.64.364-.207.25-.43 3.614-5.32 1.34-3.59-1.63-4.39-3.414-4.6-3.79-.27-2.14.78-3.32 1.05-3.6.14-.14.28-.2.43-.28 0 0 .58-.23 1.15-.23.14 0 .23-.01.32-.01.14 0 .28.01.42.04.14.03.36.09.58.62.2.5.76 1.8.76 1.8s.07.15-.02.32c-.11.17-.18.27-.3.44-.08.11-.16.22-.24.36-.08.13-.17.26-.26.4-.05.08-.1.17-.15.26-.06.11-.12.22-.18.33-.17.32-.3.57-.42.79-.12.22-.2.38-.26.5-.06.12-.1.21-.13.31-.03.1-.05.19-.05.28s.01.2.04.28c.03.09.07.17.1.25.04.09.09.18.15.27.08.13.17.26.26.4.08.14.17.27.26.4.05.08.1.17.15.26.06.11.12.22.18.33.17.32.3.57.42.79.12.22.2.38.26.5.06.12.1.21.13.31.03.1.05.19.05.28s-.01.2-.04.28c-.03.09-.07.17-.1.25-.04.09-.09.18-.15.27-.08.13-.17.26-.26.4-.08.14-.17.27-.26.4-.05.08-.1.17-.15.26-.06.11-.12.22-.18.33.11.08.23.15.36.21.2.1.42.19.66.27.18.06.37.11.57.16.2.05.41.09.63.12.44.07.89.1.34 0-.17-.02-.33-.04-.5-.07-.4-.07-.8-.11-1.2-.17-.14-.02-.3-.04-.46-.07-.2-.04-.4-.08-.6-.13-.3-.08-.6-.16-.9-.25-.3-.09-.58-.2-.87-.33-.27-.12-.53-.26-.78-.4-.25-.14-.5-.29-.73-.46-.37-.25-.72-.53-1.04-.84-.32-.3-.62-.63-.9-.98-1.24-1.53-2.02-3.32-2.31-4.73-.34-1.63-.12-3.36.43-4.88.54-1.52 1.58-2.6 2.45-3.08.5-.27 1.04-.32 1.57-.32.07 0 .15.01.23.01.12.01.23.02.35.03.12.01.23.03.35.04.23.02.46.06.7.11.23.05.46.12.69.2.14.05.28.1.43.16.14.06.28.13.42.2.16.08.31.17.47.27.15.1.3.2.45.31.14.1.28.2.42.31.14.1.27.21.4.33.08.08.16.17.24.25.05.05.1.1.15.15.2.2.4.4.58.6.14.15.28.3.4.45.1.12.2.25.3.38.1.13.2.26.29.4.09.14.17.28.25.43.07.13.14.26.2.4.06.14.1.29.15.43.04.14.08.28.12.42.04.14.07.28.09.43.02.13.04.27.05.4.01.14.01.28 0 .42-.01.14-.03.28-.06.42-.03.14-.07.28-.12.42-.04.14-.08.28-.12.42-.04.14-.08.28-.12.42zm-3.35-7.65c-.08-.13-.17-.26-.26-.4-.05-.08-.1-.17-.15-.26-.06-.11-.12-.22-.18-.33-.17-.32-.3-.57-.42-.79-.12-.22-.2-.38-.26-.5-.06-.12-.1-.21-.13-.31-.03.1-.05.19-.05.28s.01.2.04.28c.03.09.07.17.1.25.04.09.09.18.15.27.08.13.17.26.26.4.08.14.17.27.26.4.05.08.1.17.15.26.06.11.12.22.18.33.17.32.3.57.42.79.12.22.2.38.26.5.06.12.1.21.13.31.03.1.05.19.05.28s-.01.2-.04.28c-.03.09-.07.17-.1.25-.04.09-.09.18-.15.27-.08.13-.17.26-.26.4-.08.14-.17.27-.26.4-.05.08-.1.17-.15.26-.06.11-.12.22-.18.33z"/></svg>
+    </a>
+
+    <!-- Footer -->
+    <footer class="bg-gray-950 border-t border-gray-700 py-6">
+        <div class="container mx-auto px-4 max-w-7xl text-center text-sm text-gray-400">
+            <p>&copy; 2024 Brazil Agro Assets. All Rights Reserved. | M&A Advisory Services.</p>
+        </div>
+    </footer>
+
+    <script>
+        const apiKey = "";
+        const LLM_MODEL = 'gemini-2.5-flash-preview-09-2025';
+
+        // --- API Utility Functions (Kept in English for code standard) ---
+
+        async function exponentialBackoffFetch(url, options, retries = 3, delay = 1000) {
+            try {
+                const response = await fetch(url, options);
+                if (!response.ok) {
+                    if (response.status === 429 && retries > 0) {
+                        console.warn(`Rate limit hit (429). Retrying in ${delay}ms...`);
+                        await new Promise(resolve => setTimeout(resolve, delay));
+                        return exponentialBackoffFetch(url, options, retries - 1, delay * 2);
+                    }
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response;
+            } catch (error) {
+                if (retries > 0 && error.message.includes('Failed to fetch')) {
+                    console.warn(`Fetch failed. Retrying in ${delay}ms...`);
+                    await new Promise(resolve => setTimeout(resolve, delay));
+                    return exponentialBackoffFetch(url, options, retries - 1, delay * 2);
+                }
+                throw error;
+            }
+        }
+
+        async function callGeminiAPI(userQuery, systemPrompt, useSearch = false) {
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${LLM_MODEL}:generateContent?key=${apiKey}`;
+            
+            const payload = {
+                contents: [{ parts: [{ text: userQuery }] }],
+                systemInstruction: {
+                    parts: [{ text: systemPrompt }]
+                },
+            };
+            
+            if (useSearch) {
+                payload.tools = [{ "google_search": {} }];
+            }
+
+            try {
+                const response = await exponentialBackoffFetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+                const candidate = result.candidates?.[0];
+
+                if (candidate && candidate.content?.parts?.[0]?.text) {
+                    const text = candidate.content.parts[0].text;
+                    let sources = [];
+                    const groundingMetadata = candidate.groundingMetadata;
+                    
+                    if (groundingMetadata && groundingMetadata.groundingAttributions) {
+                        sources = groundingMetadata.groundingAttributions
+                            .map(attribution => ({
+                                uri: attribution.web?.uri,
+                                title: attribution.web?.title,
+                            }))
+                            .filter(source => source.uri && source.title);
+                    }
+
+                    return { text, sources };
+                } else if (result.error) {
+                    console.error("Gemini API Error:", result.error);
+                    return { text: `Gemini API Error: ${result.error.message || 'Failed to generate content.'}`, sources: [] };
+                } else {
+                    return { text: "Failed to generate content. API response is empty or incomplete.", sources: [] };
+                }
+            } catch (error) {
+                console.error("Fetch or processing error:", error);
+                return { text: `Error: Failed to communicate with Gemini service.`, sources: [] };
+            }
+        }
+
+        // --- Modal Display Functions (Titles updated to English) ---
+
+        function showModal(title, content, sources) {
+            document.getElementById('modalTitle').innerText = title;
+            document.getElementById('modalContent').innerHTML = content.replace(/\n/g, '<br>');
+            
+            const sourcesContainer = document.getElementById('modalSources');
+            sourcesContainer.innerHTML = '';
+            
+            if (sources && sources.length > 0) {
+                sourcesContainer.innerHTML = '<p class="font-semibold text-white mt-2">Consulted Sources:</p>';
+                sources.forEach((source, index) => {
+                    sourcesContainer.innerHTML += `<p class="mt-1"><a href="${source.uri}" target="_blank" class="text-blue-400 hover:text-blue-300 underline">${index + 1}. ${source.title}</a></p>`;
+                });
+            } else {
+                 sourcesContainer.innerHTML = '<p class="mt-2">Content not based on external sources (Text generation).</p>';
+            }
+
+            const modal = document.getElementById('resultModal');
+            modal.classList.remove('invisible', 'opacity-0');
+            modal.classList.add('visible', 'opacity-100');
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('resultModal');
+            modal.classList.remove('visible', 'opacity-100');
+            modal.classList.add('invisible', 'opacity-0');
+        }
+
+        function setLoading(buttonId, isLoading, originalText, isDraft = false) {
+            const button = document.getElementById(buttonId);
+            if (isLoading) {
+                button.disabled = true;
+                button.innerText = isDraft ? 'Drafting Email...' : 'Generating Briefing...';
+                button.classList.remove('hover:scale-105');
+                button.classList.add('animate-pulse');
+            } else {
+                button.disabled = false;
+                button.innerText = originalText;
+                button.classList.add('hover:scale-105');
+                button.classList.remove('animate-pulse');
+            }
+        }
+
+        // --- Contact Form Functions ---
+
+        function openContactForm() {
+            const formOverlay = document.getElementById('contactFormOverlay');
+            formOverlay.classList.remove('invisible', 'opacity-0');
+            formOverlay.classList.add('visible', 'opacity-100');
+            document.getElementById('formWarning').classList.remove('hidden');
+        }
+
+        function closeContactForm() {
+            const formOverlay = document.getElementById('contactFormOverlay');
+            formOverlay.classList.remove('visible', 'opacity-100');
+            formOverlay.classList.add('invisible', 'opacity-0');
+            // Optional: clear the form fields upon closing
+            document.getElementById('investorForm').reset();
+        }
+
+        // Function to handle form submission (simulated email via mailto)
+        function sendEmail() {
+            const name = document.getElementById('investorName').value;
+            const email = document.getElementById('investorEmail').value;
+            const phone = document.getElementById('investorPhone').value;
+            const message = document.getElementById('investorMessage').value;
+            const recipient = "brazilagroassets@gmail.com";
+            
+            const subject = encodeURIComponent(`Confidential Investment Inquiry from ${name}`);
+            
+            let body = `Dear Brazil Agro Assets Team,\n\n`;
+            body += `I am submitting a confidential inquiry regarding strategic M&A opportunities.\n\n`;
+            body += `Investor/Company Name: ${name}\n`;
+            body += `Contact Email: ${email}\n`;
+            body += `Contact Phone: ${phone || 'Not provided'}\n\n`;
+            body += `Investment Interest Summary:\n\n`;
+            body += `${message}\n\n`;
+            body += `I look forward to discussing this matter in strict confidence.\n\n`;
+            body += `Sincerely,\n${name}`;
+
+            const mailtoLink = `mailto:${recipient}?subject=${subject}&body=${encodeURIComponent(body)}`;
+
+            // Open the default email client
+            window.location.href = mailtoLink;
+
+            // Close the form after attempting to send (user will finish in their email client)
+            setTimeout(closeContactForm, 1000); 
+            
+            showModal("Form Submitted", "Thank you for your inquiry. Your device's email application should now be open with a pre-filled draft. Please review and send the email to complete your confidential contact.", []);
+        }
+
+        // --- Gemini Features (Titles and Prompts updated to English) ---
+
+        // 1. Market Briefing (Search and Summary with Grounding)
+        async function getMarketBriefing() {
+            const buttonId = 'marketBriefingButton';
+            const originalText = 'Generate Market Summary ✨';
+            
+            setLoading(buttonId, true, originalText);
+
+            const userQuery = "Summarize the current major market trends and recent news affecting the Brazilian meat (beef, poultry, pork) industry for international investors. Focus on export markets, regulatory changes (SIF/HALAL), and M&A activity.";
+            const systemPrompt = "You are an AI financial analyst specializing in M&A within the Brazilian agribusiness sector. Provide a concise, professional, and confident executive summary (2-3 paragraphs max) based on the current market data. Format the response strictly as a professional text block. Do not use bullet points or markdown headings.";
+
+            try {
+                const result = await callGeminiAPI(userQuery, systemPrompt, true);
+                
+                showModal("Market Briefing: Brazilian Meat Industry Trends", result.text, result.sources);
+
+            } catch (error) {
+                showModal("Generation Error", "Could not connect to the market intelligence service.", []);
+            } finally {
+                setLoading(buttonId, false, originalText);
+            }
+        }
+
+        // 2. Draft Communication (Email Draft Generation)
+        async function generateEmailDraft() {
+            const interestInput = document.getElementById('interestInput');
+            const interest = interestInput.value.trim();
+            
+            if (interest.length < 20) {
+                 showModal("Invalid Input", "Please provide a more detailed description of your investment interests (minimum 20 characters).", []);
+                return;
+            }
+
+            const buttonId = 'draftButton';
+            const originalText = 'Generate Email Draft ✨';
+
+            setLoading(buttonId, true, originalText, true);
+
+            const userQuery = `Draft a concise and professional introductory email to Brazil Agro Assets M&A advisory firm. The specific investment interest is: "${interest}". The tone must be highly confidential and focused on strategic buy-side mandate opportunities. Structure the email formally with Subject, Body, and placeholders for sender details.`;
+            const systemPrompt = "You are an AI assistant specialized in corporate communication for high-net-worth investors. Your task is to generate a formal, brief, and highly confidential email draft. Use only English. Ensure the Subject Line is compelling and the body respects the sensitive nature of M&A inquiries. Use professional placeholders like [Investor/Company Name], [Contact Details], and [Briefing on Investment Thesis].";
+            
+            try {
+                const result = await callGeminiAPI(userQuery, systemPrompt, false);
+                
+                showModal("Confidential Email Draft", result.text, result.sources);
+                
+            } catch (error) {
+                showModal("Generation Error", "Could not generate the email draft.", []);
+            } finally {
+                setLoading(buttonId, false, originalText, true);
+            }
+        }
+
+    </script>
+
+</body>
+</html>
